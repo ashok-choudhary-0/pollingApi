@@ -1,10 +1,10 @@
 const express = require("express")
-const app = express();
+const bodyParser = require("body-parser");
 require("dotenv").config();
 const authenticationRouter = require("./routes/authenticationRouter")
-const bodyParser = require("body-parser");
-app.use(bodyParser.json())
+const app = express();
 
+app.use(bodyParser.json())
 app.use("/", authenticationRouter)
 
 const PORT = process.env.port || 3000;

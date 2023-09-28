@@ -18,10 +18,6 @@ const user = sequelize.define('user', {
     type: DataTypes.STRING(100),
     allowNull: false
   },
-  confirmPassword: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
   email: {
     type: DataTypes.STRING(100),
     unique: true,
@@ -31,12 +27,8 @@ const user = sequelize.define('user', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  authenticationToken: {
-    type: DataTypes.STRING,
-    allowNull: true
-  }
 }, {
   tableName: 'user',
   timestamps: false
 });
-module.exports = user;
+module.exports = user

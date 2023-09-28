@@ -1,21 +1,21 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
-const registerUser = async(req, res) => {
-  const{firstName,lastName,username,password,confirmPassword,email,isAdmin} = req.body;
-  try{
-    if(password === confirmPassword){
-      if(!firstName || !lastName || !username || !password || !confirmPassword || !email){
-        res.status(404).send({message:"Please fill all the required fields"})
-      }else{
+const registerUser = async (req, res) => {
+  const { firstName, lastName, username, password, confirmPassword, email } = req.body;
+  try {
+    if (password === confirmPassword) {
+      if (!firstName || !lastName || !username || !password || !confirmPassword || !email) {
+        res.status(404).send({ message: "Please fill all the required fields" })
+      } else {
         const hashedPassword = bcrypt.hashSync(password, 10);
-        const addUser= await userModel.create({firstName,lastName,username,password:hashedPassword,email,isAdmin})
-        res.status(200).send({message:"User created successfully",addUser})
+        const addUser = await userModel.create({ firstName, lastName, username, password: hashedPassword, email, isAdmin: true })
+        res.status(200).send({ message: "User created successfully", addUser })
       }
-    }else{
-      res.status(401).send({message:"Password and confirmPassword should be same"})
+    } else {
+      res.status(401).send({ message: "Password and confirmPassword should be same" })
     }
-  }catch(err){
+  } catch (err) {
     res.status(500).send(err)
   }
 }
-module.exports = {registerUser}
+module.exports = { registerUser }
