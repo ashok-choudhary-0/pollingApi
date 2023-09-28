@@ -1,6 +1,6 @@
 const sequelize = require("../dbConnection/dbConnection")
 const { DataTypes } = require('sequelize');
-const user = sequelize.define('user', {
+const admin = sequelize.define('admin', {
   firstName: {
     type: DataTypes.STRING(100),
     allowNull: false
@@ -36,7 +36,7 @@ const user = sequelize.define('user', {
     allowNull:true
   }
 },{
-  tableName:'user',
+  tableName:'admin',
   timestamps:false
 });
-module.exports = user;
+module.exports = admin;
