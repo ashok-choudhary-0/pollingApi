@@ -44,4 +44,22 @@ const loginUser = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { registerUser, loginUser }
+const createNormalUser = async (req, res) => {
+  const { firstName, lastName, username, password, confirmPassword, email } = req.body;
+  try {
+    if (password === confirmPassword) {
+      if (!firstName || !lastName || !username || !password || !confirmPassword || !email) {
+        res.status(404).send({ message: "Please fill all the required fields" })
+      } else {
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        const addNormalUser = await userModel.create({ firstName, lastName, username, password: hashedPassword, email })
+        res.status(200).send({ message: "Normal user created successfully", addNormalUser })
+      }
+    } else {
+      res.status(401).send({ message: "Password and confirmPassword should be same" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { registerUser, loginUser, createNormalUser }
