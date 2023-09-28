@@ -34,10 +34,10 @@ const deleteSingleUser = async (req, res) => {
   }
 }
 const updateSingleUser = async (req, res) => {
-  const { firstName, lastName, password } = req.body;
+  const { firstName, lastName } = req.body;
   const userId = req.params.id
   try {
-    const updateDatabaseUser = await userModel.update({ firstName, lastName, password }, { where: { id: userId } })
+    const updateDatabaseUser = await userModel.update({ firstName, lastName }, { where: { id: userId } })
     if (updateDatabaseUser[0]) {
       res.status(200).send({ message: "User updated successfully" })
     } else {
