@@ -30,6 +30,10 @@ const user = sequelize.define('user', {
   isAdmin:{
     type:DataTypes.BOOLEAN,
     defaultValue:false,
+  },
+  authenticationToken:{
+    type:DataTypes.STRING,
+    allowNull:true
   }
 },{
   tableName:'user',
