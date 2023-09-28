@@ -30,7 +30,7 @@ const loginUser = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, dbUser.password);
         if (passwordMatch) {
           const userAuthenticationToken = jwt.sign({
-            data: `${username} + ${password}`
+            data: `${username} + ${password} + ${dbUser.isAdmin}`
           }, process.env.jwtSecKey, { expiresIn: '1h' });
           res.status(200).send({ dbUser, userAuthenticationToken })
         } else {
@@ -44,5 +44,4 @@ const loginUser = async (req, res) => {
     res.status(500).send(err)
   }
 }
-
 module.exports = { registerUser, loginUser }
