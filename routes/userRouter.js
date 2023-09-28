@@ -7,5 +7,6 @@ router.get("/list", [validateToken, isAdmin], userController.getAllUsers)
 router.get("/:id", [validateToken, isAdmin], userController.getSingleUser)
 router.post("/create", [validateToken, isAdmin], authenticationController.createNormalUser)
 router.delete("/:id", [validateToken, isAdmin], userController.deleteSingleUser)
+router.patch("/:id", [validateToken, isAdmin], userController.updateSingleUser)
 
 module.exports = router;

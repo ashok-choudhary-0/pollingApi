@@ -33,4 +33,18 @@ const deleteSingleUser = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { getAllUsers, getSingleUser, deleteSingleUser }
+const updateSingleUser = async (req, res) => {
+  const { firstName, lastName } = req.body;
+  const userId = req.params.id
+  try {
+    const updateDatabaseUser = await userModel.update({ firstName, lastName }, { where: { id: userId } })
+    if (updateDatabaseUser[0]) {
+      res.status(200).send({ message: "User updated successfully" })
+    } else {
+      res.status(404).send({ message: "UserId does not exist, please provide a valid userId" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { getAllUsers, getSingleUser, deleteSingleUser, updateSingleUser }
