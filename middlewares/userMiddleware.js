@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken")
 const validateToken = (req, res, next) => {
-  const { authToken } = req.headers
-  if (!authToken) {
+  const { token } = req.headers
+  if (!token) {
     res.status(404).send({ message: "User authentication token not found" })
   } else {
     try {
-      jwt.verify(authToken, process.env.jwtSecKey);
+      jwt.verify(token, process.env.jwtSecKey);
       next();
     } catch (err) {
       res.status(401).send({ message: "invalid/expired authentication token", err })
@@ -13,8 +13,8 @@ const validateToken = (req, res, next) => {
   }
 }
 const isAdmin = (req, res, next) => {
-  const { authToken } = req.headers;
-  jwt.verify(authToken, process.env.jwtSecKey, (err, decoded) => {
+  const { token } = req.headers;
+  jwt.verify(token, process.env.jwtSecKey, (err, decoded) => {
     if (err) {
       res.status(500).send(err)
     } else {
