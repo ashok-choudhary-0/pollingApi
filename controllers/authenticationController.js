@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
 const registerUser = async (req, res) => {
   const { firstName, lastName, username, password, confirmPassword, email } = req.body;
@@ -18,4 +19,30 @@ const registerUser = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { registerUser }
+const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    if (!username || !password) {
+      res.status(404).send({ message: "Username or password can not be empty" })
+    } else {
+      const dbUser = await userModel.findOne({ where: { username } })
+      if (dbUser) {
+        const passwordMatch = await bcrypt.compare(password, dbUser.password);
+        if (passwordMatch) {
+          const userAuthenticationToken = jwt.sign({
+            data: `${username} + ${password}`
+          }, process.env.jwtSecKey, { expiresIn: '1h' });
+          res.status(200).send({ dbUser, userAuthenticationToken })
+        } else {
+          res.status(401).send({ message: "Incorrect password, please check the password you entered" })
+        }
+      } else {
+        res.status(404).send({ message: "User not found, please check the username" })
+      }
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+
+module.exports = { registerUser, loginUser }
