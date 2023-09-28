@@ -37,8 +37,8 @@ const updateSingleUser = async (req, res) => {
   const { firstName, lastName, username, password, email } = req.body;
   const userId = req.params.id
   try {
-    const dbUser = await userModel.update({ firstName, lastName, username, password, email }, { where: { id: userId } })
-    if (dbUser[0]) {
+    const updateDatabaseUser = await userModel.update({ firstName, lastName, username, password, email }, { where: { id: userId } })
+    if (updateDatabaseUser[0]) {
       res.status(200).send({ message: "User updated successfully" })
     } else {
       res.status(404).send({ message: "UserId does not exist, please provide a valid userId" })
