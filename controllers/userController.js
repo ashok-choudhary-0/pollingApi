@@ -20,4 +20,17 @@ const getSingleUser = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { getAllUsers, getSingleUser }
+const deleteSingleUser = async (req, res) => {
+  const userId = req.params.id
+  try {
+    const dbUser = await userModel.destroy({ where: { id: userId } })
+    if (dbUser) {
+      res.status(200).send({ message: "User deleted successfully" })
+    } else {
+      res.status(404).send({ message: "UserId does not exist, please provide a valid userId" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { getAllUsers, getSingleUser, deleteSingleUser }
