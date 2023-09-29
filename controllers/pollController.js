@@ -16,17 +16,17 @@ const addNewPoll = async (req, res) => {
     res.status(500).send(err)
   }
 }
-const getPagePolls = async (req, res) => {
+const getPolls = async (req, res) => {
   const pollsLimit = Number(req.query.pollLimit)
   const pageNumber = Number(req.params.page)
   try {
-    const currentPagePolls = await pollModel.findAll({ include: [{ model: optionsModel }], limit: pollsLimit, offset: (pageNumber - 1) * pollsLimit })
-    if (currentPagePolls.length === 0) {
+    const data = await pollModel.findAll({ include: [{ model: optionsModel }], limit: pollsLimit, offset: (pageNumber - 1) * pollsLimit })
+    if (data.length === 0) {
       res.status(404).send({ message: "poll ends here, please visit previous pages to see the polls" })
     }
-    res.status(200).send({ currentPagePolls })
+    res.status(200).send({ data })
   } catch (err) {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPagePolls }
+module.exports = { addNewPoll, getPolls }
