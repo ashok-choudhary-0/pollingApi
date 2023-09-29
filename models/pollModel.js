@@ -6,14 +6,9 @@ const poll = sequelize.define('poll', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  pollOptions: {
-    type: DataTypes.ARRAY(DataTypes.JSON),
-    allowNull: false,
-    validate:{len:{args:2, message:"Min 2 option should be there to add a poll"}}
-  },
 }, {
   tableName: 'poll',
   timestamps: false
 });
-poll.hasMany(options,{foreignKey:id})
+poll.hasMany(options, { foreignKey: 'poll_id' })
 module.exports = poll

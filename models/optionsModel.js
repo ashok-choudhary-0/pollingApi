@@ -5,6 +5,13 @@ const options = sequelize.define('options', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  poll_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'poll',
+      key: 'id'
+    }
+  },
 }, {
   tableName: 'options',
   timestamps: false
