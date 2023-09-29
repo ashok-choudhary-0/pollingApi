@@ -42,4 +42,24 @@ const getSinglePoll = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPolls, getSinglePoll }
+const updateSinglePoll = async (req, res) => {
+  const id = req.params.id
+  const { pollTitle, options } = req.body;
+  try {
+    const isIdValid = await pollModel.findOne({ where: { id } })
+    if (isIdValid) {
+      await pollModel.update({ pollTitle }, { where: { id } })
+      const allOptions = await optionsModel.findAll({ where: { poll_id: id } })
+      const all_ids = allOptions.map((singleIdObj) => singleIdObj.id)
+      for (let i = 0; i < options.length; i++) {
+        await optionsModel.update({ optionTitle: options[i].optionTitle }, { where: { id: all_ids[i] } })
+      }
+      res.status(200).send({ message: "Pole updated successfully" })
+    } else {
+      res.status(404).send({ message: "No poll found on this id, please check the poll id you provided" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll }
