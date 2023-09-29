@@ -29,4 +29,17 @@ const getPolls = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPolls }
+const getSinglePoll = async (req, res) => {
+  const id = req.params.id
+  try {
+    const data = await pollModel.findOne({ where: { id }, include: [{ model: optionsModel, where: { poll_id: id } }] })
+    if (data) {
+      res.status(200).send({ data })
+    } else {
+      res.status(404).send({ message: "No poll found on this id, please check the poll id you provided" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { addNewPoll, getPolls, getSinglePoll }
