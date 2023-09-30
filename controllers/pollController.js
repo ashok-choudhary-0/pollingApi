@@ -75,4 +75,26 @@ const deleteSinglePoll = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll,deleteSinglePoll }
+const voteAPoll = async (req, res) => {
+  const pollId = req.params.id;
+  const markedOptionId = req.params.optionId;
+  try {
+    const pollAllOptions = await optionsModel.findAll({ where: { poll_id: pollId } })
+    for (let index = 0; index < pollAllOptions.length; index++) {
+      if (pollAllOptions[index].markOption === true) {
+        res.status(401).send({ message: "you can not mark multiple options for a single poll" })
+        return;
+      }
+    }
+    const pollMarked = await optionsModel.update({ markOption: true }, { where: { poll_id: pollId, id: markedOptionId } });
+    if (pollMarked[0] === 1) {
+      res.status(200).send({ message: "Poll option marked successfully" })
+    } else {
+      res.status(401).send({ message: "Incorrect pollId/optionId" })
+    }
+    
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll, deleteSinglePoll, voteAPoll }

@@ -12,6 +12,10 @@ const options = sequelize.define('options', {
       key: 'id'
     }
   },
+  markOption:{
+    type:DataTypes.BOOLEAN,
+    defaultValue:false
+  }
 }, {
   tableName: 'options',
   timestamps: false

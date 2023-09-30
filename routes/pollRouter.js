@@ -7,5 +7,6 @@ router.get("/list/:page", [validateToken], pollController.getPolls)
 router.get("/:id", [validateToken], pollController.getSinglePoll)
 router.patch("/:id", [validateToken, isAdmin], pollController.updateSinglePoll)
 router.delete("/:id", [validateToken, isAdmin], pollController.deleteSinglePoll)
+router.post("/:id/option/:optionId", [validateToken], pollController.voteAPoll)
 
 module.exports = router;
