@@ -62,4 +62,17 @@ const updateSinglePoll = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll }
+const deleteSinglePoll = async (req, res) => {
+  const id = req.params.id
+  try {
+    const data = await pollModel.destroy({ where: { id }, include: [{ model: optionsModel, where: { poll_id: id } }] })
+    if (data) {
+      res.status(200).send({ message: "Poll deleted successfully" })
+    } else {
+      res.status(404).send({ message: "No poll deleted/found on this id, please check the poll id you provided" })
+    }
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll,deleteSinglePoll }
