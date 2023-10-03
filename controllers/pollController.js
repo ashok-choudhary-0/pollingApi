@@ -1,7 +1,6 @@
 const pollModel = require("../models/pollModel")
 const optionsModel = require("../models/optionsModel")
 const voteModel = require("../models/voteModel")
-const jwt = require("jsonwebtoken")
 const addNewPoll = async (req, res) => {
   const { pollTitle, options } = req.body;
   if (!pollTitle) {
