@@ -1,5 +1,6 @@
 const pollModel = require("../models/pollModel")
 const optionsModel = require("../models/optionsModel")
+const voteModel = require("../models/voteModel")
 const addNewPoll = async (req, res) => {
   const { pollTitle, options } = req.body;
   if (!pollTitle) {
@@ -75,4 +76,27 @@ const deleteSinglePoll = async (req, res) => {
     res.status(500).send(err)
   }
 }
-module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll,deleteSinglePoll }
+const voteAPoll = async (req, res) => {
+  const pollId = req.params.id;
+  const optionId = req.params.optionId;
+  const { userId } = req.body;   // we are passing userId in body at the time of validateToken middleware
+  try {
+    const poll = pollModel.findOne({ where: { id: pollId } })
+    const option = optionsModel.findOne({ where: { id: optionId } });
+    if (!poll || !option) {
+      res.status(404).send({ message: "Poll or option not found please check the pollId and optionId you provided" })
+    }
+    const userAlreadyVoted = await voteModel.findOne({ where: { userId, pollId } })
+    if (userAlreadyVoted) {
+      return res.status(400).send({ message: "User already voted for this poll" })
+    }
+    await optionsModel.increment('totalVoted', { by: 1, where: { id: optionId } });
+    const newVote = await voteModel.create({
+      userId, optionId, pollId
+    })
+    res.status(200).send(newVote)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+}
+module.exports = { addNewPoll, getPolls, getSinglePoll, updateSinglePoll, deleteSinglePoll, voteAPoll }

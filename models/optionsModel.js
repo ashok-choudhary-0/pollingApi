@@ -12,6 +12,11 @@ const options = sequelize.define('options', {
       key: 'id'
     }
   },
+  totalVoted: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
 }, {
   tableName: 'options',
   timestamps: false
