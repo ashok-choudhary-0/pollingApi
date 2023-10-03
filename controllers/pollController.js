@@ -80,7 +80,7 @@ const voteAPoll = async (req, res) => {
   const pollId = req.params.id;
   const optionId = req.params.optionId;
   const { userId } = req.body;   // we are passing userId in body at the time of validateToken middleware
-    try {
+  try {
     const poll = pollModel.findOne({ where: { id: pollId } })
     const option = optionsModel.findOne({ where: { id: optionId } });
     if (!poll || !option) {
@@ -90,6 +90,7 @@ const voteAPoll = async (req, res) => {
     if (userAlreadyVoted) {
       return res.status(400).send({ message: "User already voted for this poll" })
     }
+    await optionsModel.increment('totalVoted', { by: 1, where: { id: optionId } });
     const newVote = await voteModel.create({
       userId, optionId, pollId
     })
