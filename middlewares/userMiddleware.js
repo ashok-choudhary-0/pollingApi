@@ -5,7 +5,14 @@ const validateToken = (req, res, next) => {
     res.status(404).send({ message: "User authentication token not found" })
   } else {
     try {
-      jwt.verify(token, process.env.jwtSecKey);
+      jwt.verify(token, process.env.jwtSecKey,(err,decoded)=>{
+        if (err) {
+          res.status(500).send(err)
+        } else {
+          const userId = decoded.data.split("+")[3]
+          req.body = {...req.body,userId:userId}
+        }
+      });
       next();
     } catch (err) {
       res.status(401).send({ message: "invalid/expired authentication token", err })
